@@ -2,8 +2,8 @@ class GamesController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
-    games = Game.all
-    render json: games
+    all_games = Game.all
+    render json: all_games
   end
 
   def create
@@ -33,8 +33,8 @@ class GamesController < ApplicationController
 
     if @game.save
       if @game.full?
-        redirect_to play_game_path(@game)
-      else
+        render json: { message: 'Game is now active' }, status: :ok
+        else
         render json: @game, status: :created
       end
     else
@@ -44,19 +44,42 @@ class GamesController < ApplicationController
 
   def update
     @game = Game.find(params[:id])
-
+  
     if @game.update(game_params)
       if @game.full?
         @game.update(status: 'active')
-        redirect_to play_game_path(@game)
-      else
-        render json: { message: 'Player 2 joined the game successfully' }, status: :ok
+        render json: { message: 'Game is now active' }, status: :ok
+            else
+        player2_id = params[:player2_id]
+        player3_id = params[:player3_id]
+  
+        if player2_id.present?
+          player2 = Player.find(player2_id)
+          if player2.chips >= @game.buli
+            @game.players << player2 unless @game.players.include?(player2)
+          else
+            render json: { errors: 'Not enough chips for Player 2 to join the game' }, status: :unprocessable_entity
+            return
+          end
+        end
+  
+        if player3_id.present?
+          player3 = Player.find(player3_id)
+          if player3.chips >= @game.buli
+            @game.players << player3 unless @game.players.include?(player3)
+          else
+            render json: { errors: 'Not enough chips for Player 3 to join the game' }, status: :unprocessable_entity
+            return
+          end
+        end
+  
+        render json: @game, status: :ok
       end
     else
       render json: { errors: @game.errors.full_messages }, status: :unprocessable_entity
     end
   end
-
+  
   def destroy
     @game = Game.find(params[:id])
     @game.destroy

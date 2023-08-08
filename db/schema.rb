@@ -10,37 +10,38 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 20_230_701_165_612) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_01_165612) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension 'plpgsql'
+  enable_extension "plpgsql"
 
-  create_table 'games', force: :cascade do |t|
-    t.integer 'creator_id'
-    t.integer 'player2_id'
-    t.integer 'player3_id'
-    t.string 'status'
-    t.integer 'duration'
-    t.integer 'buli'
-    t.integer 'ref_count'
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
+  create_table "games", force: :cascade do |t|
+    t.integer "creator_id"
+    t.integer "player2_id"
+    t.integer "player3_id"
+    t.string "status"
+    t.integer "duration"
+    t.integer "buli"
+    t.integer "ref_count"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table 'games_players', id: false, force: :cascade do |t|
-    t.integer 'game_id'
-    t.integer 'player_id'
-    t.index ['game_id'], name: 'index_games_players_on_game_id'
-    t.index ['player_id'], name: 'index_games_players_on_player_id'
+  create_table "games_players", id: false, force: :cascade do |t|
+    t.integer "game_id"
+    t.integer "player_id"
+    t.index ["game_id"], name: "index_games_players_on_game_id"
+    t.index ["player_id"], name: "index_games_players_on_player_id"
   end
 
-  create_table 'players', force: :cascade do |t|
-    t.string 'name'
-    t.string 'picture'
-    t.string 'email'
-    t.integer 'infractions', default: 0
-    t.integer 'chips', default: 0
-    t.integer 'rating', default: 0
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
+  create_table "players", force: :cascade do |t|
+    t.string "name"
+    t.string "picture"
+    t.string "email"
+    t.integer "infractions", default: 0
+    t.integer "chips", default: 0
+    t.integer "rating", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
+
 end
