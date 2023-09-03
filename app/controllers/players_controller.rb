@@ -2,6 +2,11 @@
 class PlayersController < ApplicationController
   skip_before_action :verify_authenticity_token
 
+  def show
+    player = Player.find(params[:id])
+    render json: player
+  end
+  
   def index
     players = Player.all
     render json: players

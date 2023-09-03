@@ -10,9 +10,44 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_01_165612) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_24_081822) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "auctions", force: :cascade do |t|
+    t.integer "game_id"
+    t.integer "current_player_id"
+    t.boolean "is_active", default: true
+    t.json "ready_players", default: []
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "chat_messages", force: :cascade do |t|
+    t.string "user"
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "dealt_cards", force: :cascade do |t|
+    t.integer "game_id"
+    t.json "player1"
+    t.json "player2"
+    t.json "player3"
+    t.json "table"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "game_players", force: :cascade do |t|
+    t.bigint "game_id", null: false
+    t.bigint "player_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_game_players_on_game_id"
+    t.index ["player_id"], name: "index_game_players_on_player_id"
+  end
 
   create_table "games", force: :cascade do |t|
     t.integer "creator_id"
@@ -44,4 +79,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_01_165612) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "game_players", "games"
+  add_foreign_key "game_players", "players"
 end
